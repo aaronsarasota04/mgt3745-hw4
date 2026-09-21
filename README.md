@@ -31,7 +31,7 @@ flowchart LR
 
 ## How to Run
 
-Deployed: *`https://mgt3745-hw4.YOUR-SUBDOMAIN.workers.dev/entries`*
+Deployed: *`https://mgt3745-hw4.arahim.workers.dev/entries`*
 
 From a fresh Codespace:
 

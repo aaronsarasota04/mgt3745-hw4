@@ -1,8 +1,9 @@
-(() => {
+(async () => {
   'use strict';
 
   // Keep saved drafts scoped to this feature and avoid accidental global variables.
   const storageKey = 'mgt3745.job-fit.v1';
+  const API = 'https://mgt3745-hw4.arahim.workers.dev';
   const userSkillsInput = document.querySelector('#skills-input');
   const jobInput = document.querySelector('#job-input');
   const evaluateButton = document.querySelector('#evaluate-button');
@@ -26,6 +27,7 @@
     { label: 'Kubernetes', aliases: ['kubernetes', 'k8s'] },
     { label: 'ETL', aliases: ['etl', 'extract transform load'] },
     { label: 'Spark', aliases: ['spark'] },
+    { label: 'PySpark', aliases: ['pyspark', 'spark sql'] },
     { label: 'Git', aliases: ['git'] },
     { label: 'REST APIs', aliases: ['rest api', 'rest apis', 'api design'] },
     { label: 'Tableau', aliases: ['tableau'] },
@@ -107,31 +109,68 @@
     });
   }
 
-  // Read and validate the last draft, falling back safely when storage is unavailable or corrupt.
-  function loadState() {
-    try {
-      const storedText = window.localStorage.getItem(storageKey);
-      if (storedText === null) {
-        return { userSkills: '', jobText: '' };
-      }
-
-      const parsed = JSON.parse(storedText);
-      if (!parsed || typeof parsed !== 'object') {
-        throw new Error('Unexpected stored data');
-      }
-
-      return {
-        userSkills: typeof parsed.userSkills === 'string' ? parsed.userSkills : '',
-        jobText: typeof parsed.jobText === 'string' ? parsed.jobText : ''
-      };
-    } catch {
-      statusMessage.textContent = 'Saved entries could not be read. Your current form values stay in place until you save again.';
-      return { userSkills: '', jobText: '' };
+  async function load() {
+    const res = await fetch(API + '/entries');
+    if (!res.ok) {
+      return [];
     }
+    return res.json();
   }
 
-  // Persist the complete draft and report storage failures without discarding form values.
-  function saveState(nextState) {
+  async function save(entry) {
+    const res = await fetch(API + '/entries', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(entry)
+    });
+
+    if (!res.ok) {
+      const reason = await res.text();
+      statusMessage.textContent = 'Could not sync to the server: ' + (reason || res.status);
+      return false;
+    }
+
+    return true;
+  }
+
+  // Read and validate the last draft, falling back safely when storage is unavailable or corrupt.
+  async function loadState() {
+    try {
+      const storedText = window.localStorage.getItem(storageKey);
+      if (storedText !== null) {
+        const parsed = JSON.parse(storedText);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            userSkills: typeof parsed.userSkills === 'string' ? parsed.userSkills : '',
+            jobText: typeof parsed.jobText === 'string' ? parsed.jobText : ''
+          };
+        }
+      }
+    } catch {
+      statusMessage.textContent = 'Saved entries could not be read. Your current form values stay in place until you save again.';
+    }
+
+    try {
+      const entries = await load();
+      const latest = Array.isArray(entries) && entries.length > 0 ? entries[entries.length - 1] : null;
+      if (latest && typeof latest.text === 'string') {
+        const parsed = JSON.parse(latest.text);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            userSkills: typeof parsed.userSkills === 'string' ? parsed.userSkills : '',
+            jobText: typeof parsed.jobText === 'string' ? parsed.jobText : ''
+          };
+        }
+      }
+    } catch {
+      // The network itself may be down; we keep the in-browser draft and let the user continue.
+    }
+
+    return { userSkills: '', jobText: '' };
+  }
+
+  // Persist the draft to the browser only; the Worker is updated only when the user explicitly evaluates a match.
+  function saveDraft(nextState) {
     try {
       window.localStorage.setItem(storageKey, JSON.stringify(nextState));
       return true;
@@ -141,8 +180,24 @@
     }
   }
 
+  function buildDraftState() {
+    return {
+      userSkills: userSkillsInput.value,
+      jobText: jobInput.value
+    };
+  }
+
+  async function saveEvaluation(nextState) {
+    try {
+      return await save({ text: JSON.stringify(nextState) });
+    } catch {
+      statusMessage.textContent = 'Could not reach the server';
+      return false;
+    }
+  }
+
   // Validate both inputs, calculate the percentage, and update only the result view.
-  function evaluateMatch() {
+  async function evaluateMatch() {
     const userSkills = extractSkills(userSkillsInput.value);
     const jobText = jobInput.value.trim();
 
@@ -183,32 +238,22 @@
     statusMessage.className = 'status-text';
     statusMessage.textContent = 'Match check complete.';
 
-    saveState({
-      userSkills: userSkillsInput.value,
-      jobText: jobInput.value
-    });
+    saveDraft(buildDraftState());
   }
 
-  // Restore the draft before wiring autosave so a failed storage write never clears typed input.
-  const savedState = loadState();
+  // Restore the draft before wiring the click action so a failed storage write never clears typed input.
+  const savedState = await loadState();
   userSkillsInput.value = savedState.userSkills;
   jobInput.value = savedState.jobText;
 
-  // Persist each field independently so a reload does not discard an in-progress comparison.
-  userSkillsInput.addEventListener('input', () => {
-    saveState({
-      userSkills: userSkillsInput.value,
-      jobText: jobInput.value
-    });
+  evaluateButton.addEventListener('click', async () => {
+    const nextState = buildDraftState();
+    saveDraft(nextState);
+    await evaluateMatch();
+    const saved = await saveEvaluation(nextState);
+    if (saved) {
+      statusMessage.textContent = 'Comparison saved.';
+    }
   });
-
-  jobInput.addEventListener('input', () => {
-    saveState({
-      userSkills: userSkillsInput.value,
-      jobText: jobInput.value
-    });
-  });
-
-  evaluateButton.addEventListener('click', evaluateMatch);
 })();
 
