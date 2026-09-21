@@ -1,5 +1,3 @@
-# FAILURES.md
+# FAILURES
 
-The most honest file in any repository and the rarest. What went wrong,
-what the agent got wrong, what you almost shipped. Copilot offering
-string-concatenated SQL is a fine first entry. Optional.
+Optional curiosity file. No HW3 content requirement or rubric points. Use only if it helps your reasoning.

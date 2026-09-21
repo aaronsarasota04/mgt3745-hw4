@@ -1,5 +1,3 @@
-# SOUL.md
+# SOUL
 
-The character sheet. Who is this software when nobody is looking? What does
-it refuse to do, what does it care about, what is its voice? (Convention
-borrowed from OpenClaw.) Optional.
+Optional curiosity file. No HW3 content requirement or rubric points. Use only if it helps your reasoning.

@@ -1,4 +1,3 @@
-# UX.md
+# UX
 
-Interaction notes that do not fit STYLE.md: the moment that felt wrong,
-the click you wished away, the Law of UX you keep tripping over. Optional.
+Optional curiosity file. No HW3 content requirement or rubric points. Use only if it helps your reasoning.

@@ -1,5 +1,3 @@
-# QUESTIONS.md
+# QUESTIONS
 
-Things you do not know yet and want to. Where does D1 actually store the
-bytes? What happens to a Worker when Cloudflare deploys a new version
-mid-request? Optional.
+Optional curiosity file. No HW3 content requirement or rubric points. Use only if it helps your reasoning.

@@ -6,7 +6,7 @@
 
 ## What
 
-*HW3 repository: [link it here](https://github.com/YOUR-USER/mgt3745-hw3)*
+*HW3 repository: [mgt3745-hw3](https://github.com/aaronsarasota04/mgt3745-hw3)*
 
 *One paragraph naming the problem, the user, and the feature, with links to
 [PROJECT.md](context/PROJECT.md) and [FEATURES.md](context/FEATURES.md).

@@ -1,4 +1,3 @@
-# META.md
+# META
 
-Notes about the notes. Which context file did the agent ignore? Which one
-did it over-read? What would you cut? Optional.
+Optional curiosity file. No HW3 content requirement or rubric points. Use only if it helps your reasoning.

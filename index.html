@@ -1,26 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Entries</title>
+  <title>Job Match Checker</title>
+  <!-- Keep presentation and behavior separate so each layer remains easy to maintain. -->
   <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <main>
-    <h1>Entries</h1>
-    <p class="lede">Replace this heading and copy with your HW3 feature. Structure lives here; presentation in styles.css; behavior and data in app.js.</p>
+  <main class="page-shell">
+    <!-- Establish the page's purpose before asking the user for any information. -->
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Career fit / 01</p>
+        <h1>Find the signal<br><em>inside the listing.</em></h1>
+        <p class="hero-intro">A quick, grounded comparison for technical roles. Use your actual skills and the requirements in front of you to decide whether a role deserves your time.</p>
+      </div>
+      <div class="hero-note" aria-label="How the comparison works">
+        <span class="note-number">01</span>
+        <p>Paste the role.<br><strong>See your overlap.</strong></p>
+      </div>
+    </header>
 
-    <form id="entry-form">
-      <label for="entry-text">New entry</label>
-      <input id="entry-text" name="text" type="text" autocomplete="off" required>
-      <button type="submit">Save</button>
-    </form>
+    <!-- Collect the two inputs needed to compare a candidate's skills with a role. -->
+    <section class="workspace" aria-labelledby="workspace-title">
+      <div class="section-heading">
+        <p class="section-kicker">The input</p>
+        <h2 id="workspace-title">Start with what you know.</h2>
+        <p class="instruction">Keep it simple. Separate items with commas or put each one on a new line.</p>
+      </div>
 
-    <p id="status" class="status" role="status" aria-live="polite"></p>
+      <!-- Group the candidate skills and role requirements into equally visible work areas. -->
+      <div class="input-grid">
+        <!-- Let the user describe their current toolkit without changing their wording. -->
+        <div class="input-panel">
+          <div class="field-heading">
+            <span class="step-number">01</span>
+            <h3>Your toolkit</h3>
+          </div>
+          <label for="skills-input">Skills, tools, and frameworks</label>
+          <textarea id="skills-input" rows="8"></textarea>
+          <p class="field-hint">Include coursework or project skills that reflect your current level.</p>
+        </div>
 
-    <ul id="entry-list" aria-label="Saved entries"></ul>
+        <!-- Make the opportunity the emphasized comparison target. -->
+        <div class="input-panel featured-input">
+          <div class="field-heading">
+            <span class="step-number">02</span>
+            <h3>The opportunity</h3>
+          </div>
+          <label for="job-input">Job requirements</label>
+          <textarea id="job-input" rows="8"></textarea>
+          <p class="field-hint">Paste requirements directly for the most specific comparison.</p>
+        </div>
+      </div>
+
+      <!-- Keep evaluation separate from data entry so the action is easy to find. -->
+      <div class="action-row">
+        <p class="action-note">A partial match can still be worth pursuing.</p>
+        <button id="evaluate-button" type="button"><span>Compare fit</span><span aria-hidden="true">→</span></button>
+      </div>
+      <p id="status-message" class="status-text" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Reveal the comparison only after valid input has been evaluated. -->
+    <section id="result-card" class="results" hidden aria-labelledby="results-title">
+      <div class="results-header">
+        <div>
+          <p class="section-kicker">The readout</p>
+          <h2 id="results-title">A useful starting point.</h2>
+        </div>
+      </div>
+
+      <!-- Lead with the percentage, then support it with a plain-language interpretation. -->
+      <div class="score-panel">
+        <p class="result-label">Skills alignment</p>
+        <p id="match-score" class="score">0%</p>
+        <p id="match-summary" class="summary"></p>
+      </div>
+
+      <!-- Show evidence for the score by separating matched and missing skills. -->
+      <div class="column-grid">
+        <div class="skill-column matched-column">
+          <h3>Matched skills</h3>
+          <ul id="matched-list" class="list"></ul>
+        </div>
+        <div class="skill-column missing-column">
+          <h3>Missing skills</h3>
+          <ul id="missing-list" class="list"></ul>
+        </div>
+      </div>
+      <p class="results-footnote">This is a suggestion based on the text you entered, not a prediction of an interview or offer.</p>
+    </section>
   </main>
-  <script src="app.js"></script>
 </body>
 </html>

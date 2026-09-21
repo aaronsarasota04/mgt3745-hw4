@@ -1,7 +1,3 @@
-# docs
+# Evidence media
 
-Put your See It Work GIF or screenshot here (`see-it-work.gif`), plus the two
-STYLE.md screenshots: the interface you admire and the one you resent.
-
-Recording a GIF: the Codespace browser tab plus any screen recorder; export
-under 5 MB so GitHub renders it inline.
+[A screenshot of the running app meeting an EARS Statement - IF either list is empty after trimming and removing blanks, THEN THE SYSTEM SHALL display a validation message and SHALL NOT compute a match score. ](image-1.png)

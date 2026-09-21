@@ -1,63 +1,372 @@
-/* styles.css
-   Presentation only. The tokens below should match context/STYLE.md;
-   when you change one, change both. */
 :root {
-  --color-primary: #051E39;
-  --color-accent: #B39051;
-  --color-background: #FFFFFF;
-  --color-text: #1A1A1A;
-  --color-error: #9B2C2C;
-  --font-body: Roboto, Arial, sans-serif;
-  --font-heading: "Roboto Slab", Georgia, serif;
-  --space-unit: 8px;
-  --radius: 4px;
+  --paper: #f4f1ea;
+  --surface: #fffdf8;
+  --ink: #18221f;
+  --muted: #68736d;
+  --line: #d6d8ce;
+  --teal: #176b63;
+  --teal-dark: #0d4d48;
+  --coral: #df6b4f;
 }
+
+/* Use a stable box model and a warm, readable base surface for the whole app. */
 * { box-sizing: border-box; }
+
+/* Set the global type, canvas, and default text color for the application. */
 body {
   margin: 0;
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--color-text);
-  background: var(--color-background);
+  font-family: "Trebuchet MS", Verdana, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
 }
-main {
-  max-width: 640px;
+
+/* Constrain the reading width while leaving enough space for the two input panels. */
+.page-shell {
+  max-width: 68rem;
   margin: 0 auto;
-  padding: calc(var(--space-unit) * 4) calc(var(--space-unit) * 2);
+  padding: 3.5rem 1.5rem 5rem;
 }
-h1 {
-  font-family: var(--font-heading);
-  color: var(--color-primary);
-  margin: 0 0 var(--space-unit) 0;
-}
-.lede { color: #555; margin: 0 0 calc(var(--space-unit) * 3) 0; }
-form { display: flex; flex-wrap: wrap; gap: var(--space-unit); align-items: end; }
-label { flex-basis: 100%; font-weight: bold; }
-input {
-  flex: 1;
-  min-width: 200px;
-  padding: var(--space-unit);
-  font: inherit;
-  border: 1px solid #BBB;
-  border-radius: var(--radius);
-}
-button {
-  padding: var(--space-unit) calc(var(--space-unit) * 2);
-  font: inherit;
-  color: #fff;
-  background: var(--color-primary);
-  border: 0;
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-button:hover { background: #0a2f5a; }
-.status { min-height: 1.5em; margin: var(--space-unit) 0; color: var(--color-error); }
-ul { list-style: none; padding: 0; margin: calc(var(--space-unit) * 2) 0 0 0; }
-li {
-  padding: var(--space-unit) 0;
-  border-bottom: 1px solid #E5E5E5;
+
+/* Give the introduction a distinct editorial rhythm before the working area begins. */
+.hero {
   display: flex;
   justify-content: space-between;
-  gap: var(--space-unit);
+  gap: 3rem;
+  padding: 1rem 0 4.5rem;
+  border-bottom: 1px solid var(--ink);
 }
-li time { color: #777; font-size: 14px; white-space: nowrap; }
+
+.eyebrow {
+  margin: 0 0 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+/* Establish the shared heading rhythm and serif display voice. */
+h1, h2, h3, p { margin-top: 0; }
+
+h1, h2, h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 10ch;
+  margin-bottom: 1.25rem;
+  font-size: clamp(3.2rem, 8vw, 6.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-weight: 400;
+}
+
+h1 em { color: var(--coral); font-style: italic; }
+
+h2 {
+  margin-bottom: 0.6rem;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  line-height: 1;
+  font-weight: 400;
+}
+
+h3 {
+  margin-bottom: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+
+/* Keep the explanatory copy readable without competing with the main heading. */
+.hero-intro {
+  max-width: 34rem;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* Provide a small secondary explanation beside the main hero message. */
+.hero-note {
+  align-self: flex-end;
+  min-width: 12rem;
+  padding: 1.25rem 0 0.2rem 1.25rem;
+  border-left: 1px solid var(--coral);
+}
+
+.note-number, .step-number {
+  color: var(--coral);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.hero-note p {
+  margin: 0.7rem 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1.15;
+}
+
+/* Keep instructions visually quieter than the controls that require user attention. */
+.workspace { padding: 4rem 0 1rem; }
+
+.section-heading {
+  display: grid;
+  grid-template-columns: 0.7fr 1fr 1fr;
+  align-items: end;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.section-kicker {
+  margin-bottom: 0.7rem;
+  color: var(--teal);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.section-heading .section-kicker { margin-bottom: 0; }
+.section-heading h2 { margin-bottom: 0; }
+
+/* Give supporting instructions a smaller, lower-contrast treatment. */
+.instruction, .field-hint, .action-note, .results-footnote {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.instruction { max-width: 18rem; margin: 0; }
+
+/* Place the candidate's toolkit beside the role details on larger screens. */
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.input-panel {
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+/* Signal which panel contains the role that will be evaluated. */
+.featured-input { border-top: 4px solid var(--teal); }
+
+/* Keep each field's numbered title aligned with its content. */
+.field-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 2.2rem;
+}
+
+/* Make labels readable while leaving the entered values visually prominent. */
+label {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Use large, stable controls so multi-item skill lists remain scannable. */
+textarea,
+input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 1rem;
+  border: 1px solid #aeb6ac;
+  border-radius: 0;
+  background: #fff;
+  color: var(--ink);
+}
+
+textarea {
+  min-height: 12rem;
+  resize: vertical;
+}
+
+/* Separate the optional URL from the main requirements field. */
+.url-label { margin-top: 1.25rem; }
+.field-hint { margin: 0.75rem 0 0; }
+
+/* Keep the primary action aligned with the supporting guidance without hiding either. */
+.action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.action-note { margin: 0; }
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  min-height: 3.25rem;
+  padding: 0.8rem 1.1rem 0.8rem 1.3rem;
+  border: none;
+  border-radius: 0;
+  background: var(--teal);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--teal-dark);
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(223, 107, 79, 0.45);
+  outline-offset: 2px;
+}
+
+/* Reserve space for validation and persistence feedback to avoid layout jumps. */
+.status-text {
+  min-height: 1.25rem;
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Give blocking input errors enough contrast and size to be noticed before retrying. */
+.status-text.validation-message {
+  color: var(--coral);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Make the result panel the strongest visual layer so the percentage is easy to scan. */
+.results {
+  margin-top: 3.5rem;
+  padding: 2.5rem;
+  background: var(--teal);
+  color: #f4f1ea;
+  border-top: 1rem solid var(--coral);
+}
+
+.results-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: end;
+  gap: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(244, 241, 234, 0.35);
+}
+
+/* Style the result labels as context for the larger score and role name. */
+.results .section-kicker { color: #a8d8cd; }
+.results h2 { margin-bottom: 0; }
+
+.result-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #a8d8cd;
+}
+
+.result-value {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.score {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(4.5rem, 12vw, 8.5rem);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: #fffdf8;
+}
+
+.summary {
+  max-width: 35rem;
+  margin: 1rem 0 0;
+  color: #d9eee7;
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+/* Add breathing room around the primary percentage readout. */
+.score-panel { padding: 2.25rem 0 1.25rem; }
+
+.column-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: 1.5rem;
+  background: rgba(244, 241, 234, 0.35);
+}
+
+.skill-column { padding: 1.25rem 1.5rem; background: var(--teal); }
+.skill-column h3 { color: #fffdf8; }
+.missing-column h3 { color: #f4c2b5; }
+
+.list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.7;
+  color: #d9eee7;
+}
+
+.results-footnote { margin: 2rem 0 0; color: #a8d8cd; }
+
+/* Collapse the comparison into a single readable column on narrow screens. */
+@media (max-width: 600px) {
+  .page-shell {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .hero {
+    display: block;
+    padding-bottom: 3rem;
+  }
+
+  .hero-note { margin-top: 2rem; }
+
+  .section-heading, .input-grid, .results-header, .column-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading { gap: 0.75rem; }
+
+  .action-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  button { width: 100%; }
+
+  .results {
+    padding: 1.25rem;
+  }
+
+  .results-header { gap: 1.25rem; }
+
+  .skill-column { padding: 1.25rem 0; }
+  .column-grid { background: transparent; }
+  .score-panel { padding-top: 2rem; }
+}
+
+/* Offset the two desktop input panels to create a deliberate visual sequence. */
+@media (min-width: 601px) {
+  .input-panel:first-child { margin-top: 1.5rem; }
+  .featured-input { margin-bottom: 1.5rem; }
+}
