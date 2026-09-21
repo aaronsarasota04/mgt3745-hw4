@@ -205,14 +205,14 @@
       statusMessage.className = 'status-text validation-message';
       statusMessage.textContent = 'Enter at least one skill you know before checking a role.';
       resultCard.hidden = true;
-      return;
+      return false;
     }
 
     if (!jobText) {
       statusMessage.className = 'status-text validation-message';
       statusMessage.textContent = 'Add the job requirements to compare against your skills.';
       resultCard.hidden = true;
-      return;
+      return false;
     }
 
     const jobRequirements = extractSkills(jobText);
@@ -239,6 +239,7 @@
     statusMessage.textContent = 'Match check complete.';
 
     saveDraft(buildDraftState());
+    return true;
   }
 
   // Restore the draft before wiring the click action so a failed storage write never clears typed input.
@@ -249,7 +250,10 @@
   evaluateButton.addEventListener('click', async () => {
     const nextState = buildDraftState();
     saveDraft(nextState);
-    await evaluateMatch();
+    const valid = await evaluateMatch();
+    if (!valid) {
+      return;
+    }
     const saved = await saveEvaluation(nextState);
     if (saved) {
       statusMessage.textContent = 'Comparison saved.';

@@ -68,6 +68,7 @@ This feature is designed for early-career technical job seekers navigating compe
 - IF the computed match score is between 0% and 100% inclusive, THEN THE SYSTEM SHALL show the matched skills and missing skills as separate lists to support objective review of the comparison.
 - THE SYSTEM SHALL ignore blank entries and duplicate values after normalization so that match calculations are repeatable and objectively testable.
 - IF the user reloads the page after comparing two lists, THEN THE SYSTEM SHALL restore both entered lists from saved browser state.
+- IF a submitted entry exceeds 10,000 characters, THEN THE SYSTEM SHALL reject it with a 400 response and identify that the entry is too long.
 
 ---
 
