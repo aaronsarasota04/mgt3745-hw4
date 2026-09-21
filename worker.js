@@ -66,7 +66,7 @@ async function handle(request, env) {
     if (!body.text) {
       return new Response("text required", { status: 400, headers: CORS });
     }
-    if (body.text.length > 10) {
+    if (body.text.length > 2000) {
       return new Response("text entry is too long", { status: 400, headers: CORS });
     }
     await env.DB.prepare("INSERT INTO entries (text) VALUES (?)")

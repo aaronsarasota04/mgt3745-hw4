@@ -126,6 +126,11 @@
 
     if (!res.ok) {
       const reason = await res.text();
+      if (res.status === 400) {
+        statusMessage.className = 'status-text validation-message';
+        statusMessage.textContent = 'Text is too long. Ensure it is less than 2000 characters';
+        return false;
+      }
       statusMessage.textContent = 'Could not sync to the server: ' + (reason || res.status);
       return false;
     }
