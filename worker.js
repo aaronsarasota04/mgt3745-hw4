@@ -66,7 +66,19 @@ async function handle(request, env) {
     if (!body.text) {
       return new Response("text required", { status: 400, headers: CORS });
     }
-    if (body.text.length > 2000) {
+    let parsedEntry = null;
+    try {
+      parsedEntry = JSON.parse(body.text);
+    } catch {
+      parsedEntry = null;
+    }
+
+    const fieldTooLong = parsedEntry && typeof parsedEntry === "object"
+      ? [parsedEntry.userSkills, parsedEntry.jobText]
+        .some(value => typeof value === "string" && value.length > 2000)
+      : typeof body.text === "string" && body.text.length > 2000;
+
+    if (fieldTooLong) {
       return new Response("text entry is too long", { status: 400, headers: CORS });
     }
     await env.DB.prepare("INSERT INTO entries (text) VALUES (?)")

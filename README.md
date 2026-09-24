@@ -1,71 +1,257 @@
-# Entries: Data Leaves the Browser
+# Job Skill Comparision Application
 
-> Replace this title and every *italic prompt* with your own words. Six
-> sections, in this order: What, See It Work, How to Run, Status, Links,
-> AI Use. GitHub renders this page; it can show, not only tell.
+<!-- Badges are optional but cheap. shields.io generates them from a URL. -->
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+![Module](https://img.shields.io/badge/MGT%203745-HW3-051E39)
 
 ## What
 
-*HW3 repository: [mgt3745-hw3](https://github.com/aaronsarasota04/mgt3745-hw3)*
-
-*One paragraph naming the problem, the user, and the feature, with links to
-[PROJECT.md](context/PROJECT.md) and [FEATURES.md](context/FEATURES.md).
-One sentence on where data now lives and why (ADR-002).*
+The Job Skill Comparision Application helps technical job seekers decide whether
+ a role is worth pursuing by comparing their skills with a job's requirements. I
+t reports a percentage alignment score, shows matched and missing skills, and pr
+esents the result as a suggestion rather than a guarantee of an interview or job
+ offer. See the project context in [PROJECT.md](context/PROJECT.md) and the feat
+ure requirements in [FEATURES.md](context/FEATURES.md). As of 09/24/26, data is now stored in a Cloudflare D1 database rather than in the browser.
 
 ## See It Work
 
-*A GIF or screenshot in `/docs` showing an entry surviving a cleared cache
-or appearing in a second browser. Evidence and storefront at once.*
+This screenshot shows the app meeting the empty-input EARS requirement: when eit
+her list is empty after trimming and removing blanks, the page displays a valida
+tion message and does not compute a match score. This behavior is verified in th
+e acceptance checks and is described in the Explain, Change, Verify section at t
+he bottom th page which describes the function which generates the percentage ma
+tch.
 
-![See it work](docs/see-it-work.gif)
+![A screenshot of the running app meeting an EARS Statement - IF either list is
+empty after trimming and removing blanks, THEN THE SYSTEM SHALL display a valida
+tion message and SHALL NOT compute a match score.](docs/image-1.png)
 
-```mermaid
-flowchart LR
-  A[Page loads] --> B[GET /entries]
-  B --> C[render]
-  D[User submits] --> E[POST /entries]
-  E -->|201| B
-  E -->|400| F[showError]
-  B -->|network fails| F
-```
+<!-- HTML gives you sizing control markdown does not: -->
+<!-- <img src="docs/screenshot.png" width="480" alt="The entry list after three
+saves"> -->
 
 ## How to Run
 
-Deployed: *`https://mgt3745-hw4.arahim.workers.dev/entries`*
+### Deployed Worker
 
-From a fresh Codespace:
+The deployed Cloudflare Worker and API are available at:
 
-1. Open the repository in a Codespace. The devcontainer installs xdg-utils and runs `npm install`.
-2. `npx wrangler login --device`, then follow [docs/SESSION_B_COMMANDS.md](docs/SESSION_B_COMMANDS.md)
-   to create the database, run the schema, and deploy.
-3. Paste the deployed URL into `app.js` as `API`.
-4. Right-click `index.html`, choose **Open with Live Server**.
+```text
+https://mgt3745-hw4.arahim.workers.dev
+```
 
-To run the Worker locally instead: `npm run dev` (port 8787, local D1 emulator).
+To confirm the deployed API is responding, open:
+
+```text
+https://mgt3745-hw4.arahim.workers.dev/entries
+```
+
+Open this repository in a GitHub Codespace. No local install is required.
+
+1. On your repository page, click **Code → Codespaces → Create codespace on main
+**. Wait for setup to finish; first-boot time varies.
+2. Keep the supplied `.devcontainer/devcontainer.json`. It configures Live Serve
+r installation and port 5500 forwarding. Once the extension is ready, right-clic
+k `index.html` and choose **Open with Live Server**, or use **Go Live**.
+3. If a browser tab does not open, use the **Ports** tab to open port 5500. Keep
+ its visibility **Private**.
+4. With Live Server running, save your edits to reload the page.
+
+If Live Server is unavailable, run `node scripts/serve.mjs` in the terminal, the
+n open port 5500 from the Ports tab. Refresh the browser after edits when using
+this fallback; stop it with **Ctrl+C**. Run only one server on port 5500 at a ti
+me. The fallback also works locally with Node 22 or later. Serve over HTTP rathe
+r than opening `index.html` through `file://`.
+
+### Run the Worker locally
+
+The static page and the Cloudflare Worker use different local ports. Start the
+Worker in a second terminal:
+
+```bash
+npx wrangler d1 execute mgt3745-entries --local --file=schema.sql
+npx wrangler dev
+```
+
+Wrangler normally serves the Worker at `http://localhost:8787`. Test it with:
+
+```bash
+curl http://localhost:8787/entries
+```
+
+Keep the first command only for the initial local database setup, or after the
+schema changes. Stop the Worker with **Ctrl+C**.
+
+The current browser app uses the deployed Worker URL in `app.js`, so running
+`wrangler dev` alone does not redirect the page's requests to localhost. To
+exercise the page against the local Worker, temporarily change its `API`
+constant to `http://localhost:8787`, run the page on port 5500, and restore the
+deployed URL before committing or publishing the frontend.
+
+<!-- The .devcontainer folder installs Live Server automatically. If the right-c
+lick option
+     is missing, wait for the extension to finish installing (bottom-left status
+ bar), or run
+     `python3 -m http.server 5500` in the terminal and open port 5500 from the P
+orts tab.
+     Edit these steps if your feature needs anything more. -->
+
+## How It Works
+
+<!-- GitHub renders Mermaid natively inside a ```mermaid fence. -->
+
+```mermaid
+flowchart TD
+ A[Page opens] --> B[Restore draft from localStorage]
+ B --> C[User enters skills and job requirements]
+ C --> D[Split, normalize, and remove blanks and duplicates]
+ D --> E{Both lists contain skills?}
+ E -->|No| F[Show validation message and keep form values]
+ E -->|Yes| G[Calculate percentage of matched job skills]
+ G --> H[Show score, summary, matched skills, and missing skills]
+ H --> I[Save draft to localStorage]
+```
+
+The application reads saved drafts, accepts comma- or line-separated skills, nor
+malizes common aliases, and ignores blank or duplicate entries. It compares each
+ unique job requirement with the user's skills, calculates the percentage match,
+ and renders separate matched and missing lists. Input validation and storage er
+ror messages preserve the user's typed values.
 
 ## Status
 
-| Feature | EARS statement | Verdict |
-|---|---|---|
-| *Save an entry* | *WHEN a valid entry is submitted, THE SYSTEM SHALL store it* | *PASS* |
-| *Reject empty entry* | *IF text is missing, THEN THE SYSTEM SHALL reject with a reason* | *PASS* |
-| *Survive cleared cache* | *THE SYSTEM SHALL return stored entries on any device* | *PASS* |
-| *Network down* | *IF the server is unreachable, THE SYSTEM SHALL tell the user* | *CANNOT TEST YET* |
-| *Two clients, one table* | *...* | *DEFERRED (ADR-002)* |
+| Area | State | Why |
+|------|-------|-----|
+| Comparison, validation, and display | Works | The implemented flow calculates the match percentage, shows matched and missing skills, and handles empty inputs. |
+| Draft and server persistence | Works | Browser drafts use localStorage, and valid comparisons are saved through the deployed Worker and D1 database. |
+| Storage failure handling | Deferred | The app preserves typed values when a browser save fails, but there is no broader recovery or retry workflow. |
+| Multi-user sync and concurrency | Deferred | Shared D1 storage is available, but the app does not define conflict handling or coordination between clients. |
+| Network and server-error simulation | Deferred | The Worker has error responses, but controlled outage and 500-path verification are not part of the current local workflow. |
 
-*Full verification table lives in [FEATURES.md](context/FEATURES.md).*
+
+<details>
+<summary>Verification results (click to expand)</summary>
+
+The automated suite passed all 8 EARS tests, covering comparison percentages, em
+pty input validation, fit thresholds, matched and missing lists, normalization,
+and reload persistence. See the [full Verification results](context/FEATURES.md#
+verification) for the procedures and observed outcomes. Storage-failure handling
+ is not implemented.
+
+</details>
 
 ## Links
 
-Reading order for a stranger: [PROJECT.md](context/PROJECT.md) →
-[USERS.md](context/USERS.md) → [FEATURES.md](context/FEATURES.md) →
-[ARCHITECTURE.md](context/ARCHITECTURE.md) → [STANDARDS.md](context/STANDARDS.md) →
-[TOOLS.md](context/TOOLS.md) → [STYLE.md](context/STYLE.md) →
-[CLAUDE.md](context/CLAUDE.md)
+Read in this order:
+
+0. [`SCAFFOLD_MANIFEST.md`](SCAFFOLD_MANIFEST.md): explains what carries over fr
+om HW2 into HW3, along with a submission checklist
+1. [`context/PROJECT.md`](context/PROJECT.md): the problem and its framing
+2. [`context/USERS.md`](context/USERS.md): who this is for
+3. [`context/FEATURES.md`](context/FEATURES.md): what it must do, and verificati
+on results
+4. [`context/ARCHITECTURE.md`](context/ARCHITECTURE.md): the gate and ADR-001
+5. [`context/STANDARDS.md`](context/STANDARDS.md): the rules this code follows
+6. [`context/CLAUDE.md`](context/CLAUDE.md): the same rules, for agents
+7. [`context/TOOLS.md`](context/TOOLS.md): tools, deployment, and accountability
+8. [`context/STYLE.md`](context/STYLE.md): visual and interaction standards
+9. [`index.html`](index.html): the page structure and form controls
+10. [`styles.css`](styles.css): the page styling and layout
+11. [`app.js`](app.js): comparison, validation, rendering, and storage logic
+12. [`app.test.js`](app.test.js): automated behavior tests
+13. [`manifest.json`](manifest.json): application metadata
+
+The scaffold also includes [SKILLS.md](context/SKILLS.md),
+[EVALS.md](context/EVALS.md), and [AGENTS.md](context/AGENTS.md). Verification
+stays in FEATURES.md until EVALS.md activates in Module 5.
+
+Root README.md and the two instruction adapters—[CLAUDE.md](CLAUDE.md) and [.git
+hub/copilot-instructions.md](.github/copilot-instructions.md)—are additional fil
+es. Copy your HW2 USERS.md and FEATURES.md into `/context` and revise them using
+ instructor feedback if available; otherwise record a peer criterion check and m
+ark instructor feedback pending. Run `node scripts/check-scaffold.mjs` to check
+required file presence; this does not assess content quality.
 
 ## AI Use
 
-*Three proto-DDR questions. What did the agent write? What did you check,
-and how? What could you not fully verify, and what did you do about it?
-For the Worker specifically: name the thing you could not fully inspect.
-Hours spent: ___.*
+<!-- A Delegation Decision Record without the name. From HW5 this becomes a form
+al DDR. -->
+
+**Tool and task delegated:** Creation of app.js and associated unit tests to cov
+er EARS evidence, index.html, styles.css and generation of parts of README.md, C
+LAUDE.md. For other files it was used to polish writing after my drafts.
+
+**Why:** Creating the app by hand and testing it would have taken a lot of time
+(estimating a month).  Generating the How it works, what it does sections of the
+ README makes sense since AI could use app.js, index.html, styles.css and contex
+t files to easily generate this information.
+
+**How it was checked:** Manually checked code to see whether instances of innerH
+TML was used(which it did not). After AI generated the app I made edits to incre
+ase font size for validation message, edit and remove pre-written text, and remo
+ve dead code not used.
+
+**Observed result / evidence:** The change history records the following feature
+ work and checks:
+
+- [Verification results](context/FEATURES.md#verification).
+- [Validation message styling](styles.css) was checked with the empty-input EARS
+ test and manual visual review; commit `2aaca8f5e1c87582b1a9f2192e602c61e8d93e57
+` records the increase in message size.
+- [Prefilled input removal](index.html) was manually checked by confirming both
+fields open blank; commit `a964338c9c967bd91fea72a4bbff6ebf5f451067` records the
+ removal.
+- [No skill match despite 100% display fix](https://github.com/aaronsarasota04/m
+gt3745-hw3/commit/9d3f2e24f8877f557100ac5fbced39801850e113) was checked by the e
+xact-match EARS test.
+- [LinkedIn link removal](https://github.com/aaronsarasota04/mgt3745-hw3/commit/
+2f78fff6e6fbebf672bb16df2d56da04018ebe40) and [role profile removal](https://git
+hub.com/aaronsarasota04/mgt3745-hw3/commit/6878148e9c2a01342d2225e96fbe80a71584a
+5a9) were manually reviewed as scope reductions; the current unit suite checks t
+hat the remaining comparison workflow still passes.
+
+**Instruction discovery and compliance:** Github Copilot. It read instructions f
+rom CLAUDE.md. All standards in CLAUDE.md has been ensured it is present in the
+code
+
+
+**Actual hours on this assignment (optional):** 6
+
+## Explain, Change, Verify
+
+[Identify one function and explain its input, state changes, and output in your
+own words. Link a meaningful before/after code change, state its expected effect
+, and record the observed behavior and evidence. Explain why the change matters
+to your selected requirement. This paragraph is part of the existing README subm
+ission.]
+
+The function evaluateMatch does not take in any input. It extracts the skills in
+put by the user for themselves and for the job they are trying to compare it wit
+h into two lists (these are saved as constants) . If any of these lists are null
+, then it prints a validation message, depending on which list is null. It then
+filters out matched skills, missing skills, and calculates a percentage of skill
+s matched. If the percentage is more than 75%, a message saying it is a strong f
+it is recorded; if it is between 50 and 75%, it is a partial fit, otherwise it i
+s a weak fit. All of these constants are then output to show on the webpage. Thi
+s function is crucial to the webpage, since it handles the main logic on how two
+ lists are converted to a percentage the user can then use to decide whether to
+pursue that job or not.
+
+### Before and after the code change
+
+Before the change, the app did not do anything once Compare fit is clicked. The
+logic when this is clicked is controlled by evaluateMatch which can be seen in t
+he second photo below. 
+
+![Before the code change](docs/Before%20code%20change.png)
+
+![After the code change](docs/After%20code%20change.png)
+
+<!-- Things this README could also do, if they earn their place:
+     - GitHub alerts:  > [!NOTE]  > [!WARNING]  > [!TIP]
+     - Task lists:     - [x] done   - [ ] not yet
+     - Emoji:          :rocket: :white_check_mark:
+     - Footnotes:      text[^1]  ...  [^1]: the note
+     - Embedded HTML tables, <kbd>Ctrl</kbd>+<kbd>S</kbd>, <sup>, <sub>
+     None are required. A README that reads well with none of them beats one tha
+t uses all of them. -->

@@ -31,8 +31,8 @@ body is what a human reads. One sentence per token. "Looks clean" is fog;
 Things this interface will never do, and why. Taken from the interface you
 resent. Name the Law of UX it breaks (lawsofux.com).
 
-1. *No modals for anything the user did not ask for. Breaks: ...*
-2. *...*
+1. *No more than two choices the user must interact with on any screen. Breaks: Hick's Law (choice overload).*
+2. *No more than five elements (whether it be paragraphs, pictures, text headings, GIF's, user input) on any screen. Breaks: Miller's Law (cognitive overload).*(Note: Miller's Law says seven elements but I am setting the limit to five to make it easier)
 
 ## Sources
 
