@@ -38,17 +38,19 @@ saves"> -->
 
 ### Deployed Worker
 
-The deployed Cloudflare Worker and API are available at:
+The deployed Cloudflare Worker is available at:
 
 ```text
 https://mgt3745-hw4.arahim.workers.dev
 ```
 
-To confirm the deployed API is responding, open:
+The bare root URL is the worker entry point, not the static app page. This project serves the interface through a separate frontend (for example, Live Server on port 5500), while the worker exposes its API at:
 
 ```text
 https://mgt3745-hw4.arahim.workers.dev/entries
 ```
+
+That `/entries` URL is the correct endpoint to check when confirming the deployed Worker is responding.
 
 Open this repository in a GitHub Codespace. No local install is required.
 
@@ -169,24 +171,16 @@ stays in FEATURES.md until EVALS.md activates in Module 5.
 The root README.md and context files are the project documentation for this
 submission. The `docs` folder contains the provided HW4 deployment guidance.
 
-## AI Use
+## AI Use (Check HW4 under the HW 3)
 
 <!-- A Delegation Decision Record without the name. From HW5 this becomes a form
 al DDR. -->
 
-**Tool and task delegated:** Creation of app.js and associated unit tests to cov
-er EARS evidence, index.html, styles.css and generation of parts of README.md, C
-LAUDE.md. For other files it was used to polish writing after my drafts.
+**Tool and task delegated:** Creation of app.js and associated unit tests to cover EARS evidence, index.html, styles.css, and generation of parts of README.md and CLAUDE.md. For other files it was used to polish writing after my drafts.
 
-**Why:** Creating the app by hand and testing it would have taken a lot of time
-(estimating a month).  Generating the How it works, what it does sections of the
- README makes sense since AI could use app.js, index.html, styles.css and contex
-t files to easily generate this information.
+**Why:** Creating the app by hand and testing it would have taken a lot of time (estimating a month). Generating the How it works and what it does sections of the README makes sense since AI could use app.js, index.html, styles.css, and context files to draft the information quickly.
 
-**How it was checked:** Manually checked code to see whether instances of innerH
-TML was used(which it did not). After AI generated the app I made edits to incre
-ase font size for validation message, edit and remove pre-written text, and remo
-ve dead code not used.
+**How it was checked:** I manually checked the actual worker behavior, confirmed the root URL returns 404 while `/entries` responds correctly, and compared that against the documentation. I also reviewed the generated text and corrected wording where it was unclear or misleading.
 
 **Observed result / evidence:** The change history records the following feature
  work and checks:
@@ -216,11 +210,11 @@ code
 
 ### HW 4:
 
-**Tool and task delegated:** I used AI to debug `worker.js` and confirm that the HTTP 400 path worked as intended, update `TOOLS.md` with the tools used, bring the HW3 files into the HW4 project, update the HW3 `app.test.js` unit tests used for verification so they worked with the Worker-backed app, and proofread my drafts in the other Markdown files to polish the writing.
+**Tool and task delegated:** I used AI to debug `worker.js` and confirm that the HTTP 400 path worked as intended, update `TOOLS.md` with the tools used, bring the HW3 files into the HW4 project, update the HW3 `app.test.js` unit tests used for verification so they worked with the Worker-backed app, and proofread my drafts in the other Markdown files to polish the writing."How to Run the Worker Locally" section was generated with AI assistance, but then verified and corrected by me before submission.
 
 **Why:** I delegated these tasks to save time, reduce the risk of errors while moving files manually, and avoid additional debugging problems because I am still becoming familiar with front-end development.
 
-**How it was checked:** I ran the updated `app.test.js` unit tests used for HW3 verification and confirmed that all eight comparison and persistence tests passed with the HW4 fetch-backed app. For the Worker, Copilot wrote the `fieldTooLong` variable. It first parses `body.text` as JSON and then checks whether the `userSkills` or `jobText` fields are longer than 2,000 characters; if parsing fails, it falls back to checking the raw text length. I could not fully verify every possible JSON shape or malformed payload branch, so I reviewed that logic and asked Copilot to test an entry over 2,000 characters. I then manually pasted a 2,000-character entry into the website and confirmed that the deployed Worker returned HTTP 400 and the page displayed the expected validation message. I also checked that the transferred HW3 files and polished Markdown still reflected my original work and requirements.
+**How it was checked:** I ran the updated `app.test.js` unit tests used for HW3 verification and confirmed that all eight comparison and persistence tests passed with the HW4 fetch-backed app. For the Worker, Copilot wrote the `fieldTooLong` variable. It first parses `body.text` as JSON and then checks whether the `userSkills` or `jobText` fields are longer than 2,000 characters; if parsing fails, it falls back to checking the raw text length. I could not fully verify every possible JSON shape or malformed payload branch, so I reviewed that logic and asked Copilot to test an entry over 2,000 characters. I then manually pasted a 2,000-character entry into the website and confirmed that the deployed Worker returned HTTP 400 and the page displayed the expected validation message. I also checked that the transferred HW3 files and polished Markdown still reflected my original work and requirements. For running the worker locally, I manually did the steps it gave me to verify output.
 
 **Actual hours on this assignment:** 7
 
