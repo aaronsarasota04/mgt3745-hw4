@@ -34,8 +34,9 @@ Consequences: The chosen architecture keeps the feature fast, easy to inspect, a
 | Cost to maintain |4 |2 |5 |2 |
 | Time to working |4 |3 |1 |2 |
 | Inspectability |5 |5 |4 |5 |
-| Switching cost |2 |1 |3 | |
+| Switching cost |2 |5 |3 |4 |
 | Fit to spec |4 |5 |3 |5 |
+| **Weighted total** | | **79** | **70** | **75** |
 
 ## ADR-002
 
@@ -46,6 +47,6 @@ Door: Delegate.
 
 Context: This feature is important to ensure user-entered skills and job skills survive a cleared cache and to prevent accidental loss of data input to the app. When the user evaluates a match, the browser sends a JSON snapshot containing the entered skills and job requirements to this project's Cloudflare Worker, which stores the snapshot in Cloudflare D1. The crossing is to Cloudflare under Cloudflare's applicable Terms of Service and D1 service terms; the developer who created the app is accountable for the app's data handling, request validation, and configuration, while Cloudflare is accountable for operating the Worker and D1 services under those terms.
 
-Decision: We use the Build option (Cloudflare and D1), where I create my own worker and wire it to the app.js file. The 1/3/5 anchors were used consistently: 1 = least favorable, 3 = moderate, 5 = most favorable.
+Decision: We use the Build option (Cloudflare and D1), where I create my own Worker and wire it to the app.js file. The weighted totals are 79 for hand-built, 70 for an existing service, and 75 for an AI-assisted build, so Build is the highest-scoring option. The switching-cost score reflects the experience of moving the data to a Worker and D1 once during this assignment. I used AI assistance during implementation, but I retained responsibility for inspecting and verifying the Worker, its bind() usage, its 400 validation path, and its connection to the page. The 1/3/5 anchors were used consistently: 1 = least favorable, 3 = moderate, 5 = most favorable.
 
 Consequences: Testing is harder because it must cover the browser, the data transfer from the browser to the Worker, request validation, failed network requests, and the D1 binding rather than only the local calculator. The shared table may contain a stranger's skills or other sensitive information, creating security and privacy risks if unauthorized users can access it or if the data is retained too long. Cloudflare usage and storage costs also make a predictable cost ceiling harder to guarantee, so request limits, retention rules, and usage monitoring are needed to control expenses. Revisit this ADR if these risks require stronger access controls, offline-first persistence, retention controls, or a predictable cost ceiling.

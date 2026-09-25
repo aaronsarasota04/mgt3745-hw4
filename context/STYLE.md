@@ -1,7 +1,7 @@
 ---
 # Tokens: what a machine reads. Replace every value with one pulled from the
 # interface you admire. Guess the hex; precision is HW5's problem.
-color-primary: "#87CEEB"
+color-primary: "#1F3A5F"
 color-accent: "#FFD700"
 color-background: "#FFFFFF"
 color-text: "#1A1A1A"
@@ -20,7 +20,7 @@ body is what a human reads. One sentence per token. "Looks clean" is fog;
 
 ## Rationale
 
-- **color-primary**: *Sky blue is professional, approachable, and easy to read, giving the interface a trustworthy foundation without overpowering the content or reducing legibility for the audience.*
+- **color-primary**: *Dark blue gives the interface a focused, trustworthy foundation and provides stronger contrast for the job-search workflow.*
 - **color-accent**: *Yellow is used to differentiate the most critical parts of the webpage and draw attention to the areas that matter most, while staying limited in use so it never overwhelms the interface or distracts from the core content.*
 - **font-body / font-heading**: *Arial is used for descriptions and explanatory text because it is readable and neutral, while Times New Roman is reserved for the names of distinct sections and the main title to create hierarchy and emphasis without cluttering the page.*
 - **space-unit**: *so nothing is eyeballed*

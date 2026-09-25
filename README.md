@@ -1,12 +1,12 @@
-# Job Skill Comparision Application
+# Job Skill Comparison Application
 
 <!-- Badges are optional but cheap. shields.io generates them from a URL. -->
 ![Status](https://img.shields.io/badge/status-in%20progress-yellow)
-![Module](https://img.shields.io/badge/MGT%203745-HW3-051E39)
+![Module](https://img.shields.io/badge/MGT%203745-HW4-051E39)
 
 ## What
 
-The Job Skill Comparision Application helps technical job seekers decide whether
+The Job Skill Comparison Application helps technical job seekers decide whether
  a role is worth pursuing by comparing their skills with a job's requirements. I
 t reports a percentage alignment score, shows matched and missing skills, and pr
 esents the result as a suggestion rather than a guarantee of an interview or job
@@ -148,8 +148,6 @@ verification) for the procedures and observed outcomes. Storage-failure handling
 
 Read in this order:
 
-0. [`SCAFFOLD_MANIFEST.md`](SCAFFOLD_MANIFEST.md): explains what carries over fr
-om HW2 into HW3, along with a submission checklist
 1. [`context/PROJECT.md`](context/PROJECT.md): the problem and its framing
 2. [`context/USERS.md`](context/USERS.md): who this is for
 3. [`context/FEATURES.md`](context/FEATURES.md): what it must do, and verificati
@@ -162,19 +160,14 @@ on results
 9. [`index.html`](index.html): the page structure and form controls
 10. [`styles.css`](styles.css): the page styling and layout
 11. [`app.js`](app.js): comparison, validation, rendering, and storage logic
-12. [`app.test.js`](app.test.js): automated behavior tests
-13. [`manifest.json`](manifest.json): application metadata
-
+12. [`app.test.js`](app.test.js): updated unit tests used for HW3 verification
+13. [`docs/SESSION_B_COMMANDS.md`](docs/SESSION_B_COMMANDS.md): deployment and local testing commands
 The scaffold also includes [SKILLS.md](context/SKILLS.md),
 [EVALS.md](context/EVALS.md), and [AGENTS.md](context/AGENTS.md). Verification
 stays in FEATURES.md until EVALS.md activates in Module 5.
 
-Root README.md and the two instruction adapters—[CLAUDE.md](CLAUDE.md) and [.git
-hub/copilot-instructions.md](.github/copilot-instructions.md)—are additional fil
-es. Copy your HW2 USERS.md and FEATURES.md into `/context` and revise them using
- instructor feedback if available; otherwise record a peer criterion check and m
-ark instructor feedback pending. Run `node scripts/check-scaffold.mjs` to check
-required file presence; this does not assess content quality.
+The root README.md and context files are the project documentation for this
+submission. The `docs` folder contains the provided HW4 deployment guidance.
 
 ## AI Use
 
@@ -223,11 +216,11 @@ code
 
 ### HW 4:
 
-**Tool and task delegated:** I used AI to debug `worker.js` and confirm that the HTTP 400 path worked as intended, update `TOOLS.md` with the tools used, bring the HW3 files into the HW4 project, and proofread my drafts in the other Markdown files to polish the writing.
+**Tool and task delegated:** I used AI to debug `worker.js` and confirm that the HTTP 400 path worked as intended, update `TOOLS.md` with the tools used, bring the HW3 files into the HW4 project, update the HW3 `app.test.js` unit tests used for verification so they worked with the Worker-backed app, and proofread my drafts in the other Markdown files to polish the writing.
 
 **Why:** I delegated these tasks to save time, reduce the risk of errors while moving files manually, and avoid additional debugging problems because I am still becoming familiar with front-end development.
 
-**How it was checked:** For the Worker, Copilot wrote the `fieldTooLong` variable. It first parses `body.text` as JSON and then checks whether the `userSkills` or `jobText` fields are longer than 2,000 characters; if parsing fails, it falls back to checking the raw text length. I could not fully verify every possible JSON shape or malformed payload branch, so I reviewed that logic and asked Copilot to test an entry over 2,000 characters. I then manually pasted a 2,000-character entry into the website and confirmed that the deployed Worker returned HTTP 400 and the page displayed the expected validation message. I also checked that the transferred HW3 files and polished Markdown still reflected my original work and requirements.
+**How it was checked:** I ran the updated `app.test.js` unit tests used for HW3 verification and confirmed that all eight comparison and persistence tests passed with the HW4 fetch-backed app. For the Worker, Copilot wrote the `fieldTooLong` variable. It first parses `body.text` as JSON and then checks whether the `userSkills` or `jobText` fields are longer than 2,000 characters; if parsing fails, it falls back to checking the raw text length. I could not fully verify every possible JSON shape or malformed payload branch, so I reviewed that logic and asked Copilot to test an entry over 2,000 characters. I then manually pasted a 2,000-character entry into the website and confirmed that the deployed Worker returned HTTP 400 and the page displayed the expected validation message. I also checked that the transferred HW3 files and polished Markdown still reflected my original work and requirements.
 
 **Actual hours on this assignment:** 7
 

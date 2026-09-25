@@ -220,6 +220,12 @@
       return false;
     }
 
+    const saved = await saveEvaluation(buildDraftState());
+    if (!saved) {
+      resultCard.hidden = true;
+      return false;
+    }
+
     const jobRequirements = extractSkills(jobText);
     const matchedSkills = jobRequirements.filter(skill =>
       userSkills.some(userSkill => normalizeSkill(userSkill) === normalizeSkill(skill))
@@ -259,10 +265,7 @@
     if (!valid) {
       return;
     }
-    const saved = await saveEvaluation(nextState);
-    if (saved) {
-      statusMessage.textContent = 'Comparison saved.';
-    }
+    statusMessage.textContent = 'Comparison saved.';
   });
 })();
 
