@@ -109,20 +109,33 @@ orts tab.
 ```mermaid
 flowchart TD
  A[Page opens] --> B[Restore draft from localStorage]
- B --> C[User enters skills and job requirements]
- C --> D[Split, normalize, and remove blanks and duplicates]
- D --> E{Both lists contain skills?}
- E -->|No| F[Show validation message and keep form values]
- E -->|Yes| G[Calculate percentage of matched job skills]
- G --> H[Show score, summary, matched skills, and missing skills]
- H --> I[Save draft to localStorage]
+ B --> C[Load latest server record from Cloudflare Worker]
+ C --> D[User enters skills and job requirements]
+ D --> E[Split, normalize, remove blanks, and deduplicate]
+ E --> F{Both lists contain skills?}
+ F -->|No| G[Show validation message and keep form values]
+ F -->|Yes| H[Compute matched vs missing skills and match percentage]
+ H --> I[Render score, fit summary, and list details]
+ I --> J[Save draft to localStorage]
+ I --> K[POST JSON payload to Worker /entries]
+ K --> L[Worker validates JSON and length]
+ L --> M[Insert row into Cloudflare D1 entries table]
+ M --> N[Reload restores the newest D1 row via GET /entries]
 ```
 
-The application reads saved drafts, accepts comma- or line-separated skills, nor
-malizes common aliases, and ignores blank or duplicate entries. It compares each
- unique job requirement with the user's skills, calculates the percentage match,
- and renders separate matched and missing lists. Input validation and storage er
-ror messages preserve the user's typed values.
+The page keeps a local browser draft in `localStorage` so typed values survive a
+refresh, but the real persistence path is the Cloudflare Worker and D1 database.
+When the user evaluates a match, the browser sends a JSON payload like
+`{"userSkills": "...", "jobText": "..."}` to the Worker at `/entries`. The
+Worker validates the request, rejects oversized entries over 2,000 characters
+with a 400 response, and inserts the raw text into the D1 table using the bound
+`env.DB` connection. On the next load, the app first restores the in-browser
+state and then falls back to the latest row returned by `GET /entries`, which is
+why a saved entry still appears after the browser cache is cleared.
+
+The comparison logic itself still reads the user and job lists, normalizes common
+aliases, ignores blank and duplicate entries, and calculates the percentage match
+before rendering matched and missing skills and the fit summary.
 
 ## Status
 
@@ -138,11 +151,11 @@ ror messages preserve the user's typed values.
 <details>
 <summary>Verification results (click to expand)</summary>
 
-The automated suite passed all 8 EARS tests, covering comparison percentages, em
-pty input validation, fit thresholds, matched and missing lists, normalization,
-and reload persistence. See the [full Verification results](context/FEATURES.md#
-verification) for the procedures and observed outcomes. Storage-failure handling
- is not implemented.
+The automated suite passed all 8 EARS tests, covering comparison percentages,
+empty-input validation, fit thresholds, matched and missing list rendering,
+normalization, and reload persistence. The complete evidence and procedures are in
+the [full verification results](context/FEATURES.md#verification). Storage-failure
+handling is not implemented.
 
 </details>
 
