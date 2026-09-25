@@ -11,10 +11,9 @@
 //   status 400  the EARS "unwanted behavior" row, executable
 //   CORS        headers that tell the browser your page is allowed to call this Worker
 
-// Session B uses "*" so everyone's page works on the first try.
-// HW4 Craft credit: replace "*" with your page's origin once it is deployed.
+// Allow requests from the Codespaces Live Server page.
 const CORS = {
-  "access-control-allow-origin": "*",
+  "access-control-allow-origin": "https://probable-spork-q77j9659pqwrc6vg-5501.app.github.dev",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type",
 };
