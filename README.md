@@ -26,6 +26,10 @@ tch.
 empty after trimming and removing blanks, THEN THE SYSTEM SHALL display a valida
 tion message and SHALL NOT compute a match score.](docs/image-1.png)
 
+![GIF showing saved entries remaining after the browser cache is cleared and the page is refreshed.](docs/Animation.gif)
+
+This GIF demonstrates the persistence behavior: after entries are saved, the browser cache is cleared and the page is refreshed, yet the saved entries still remain. That confirms the entries survive a cleared cache and reload.
+
 <!-- HTML gives you sizing control markdown does not: -->
 <!-- <img src="docs/screenshot.png" width="480" alt="The entry list after three
 saves"> -->
@@ -216,6 +220,16 @@ code
 
 
 **Actual hours on this assignment (optional):** 6
+
+### HW 4:
+
+**Tool and task delegated:** I used AI to debug `worker.js` and confirm that the HTTP 400 path worked as intended, update `TOOLS.md` with the tools used, bring the HW3 files into the HW4 project, and proofread my drafts in the other Markdown files to polish the writing.
+
+**Why:** I delegated these tasks to save time, reduce the risk of errors while moving files manually, and avoid additional debugging problems because I am still becoming familiar with front-end development.
+
+**How it was checked:** For the Worker, Copilot wrote the `fieldTooLong` variable. It first parses `body.text` as JSON and then checks whether the `userSkills` or `jobText` fields are longer than 2,000 characters; if parsing fails, it falls back to checking the raw text length. I could not fully verify every possible JSON shape or malformed payload branch, so I reviewed that logic and asked Copilot to test an entry over 2,000 characters. I then manually pasted a 2,000-character entry into the website and confirmed that the deployed Worker returned HTTP 400 and the page displayed the expected validation message. I also checked that the transferred HW3 files and polished Markdown still reflected my original work and requirements.
+
+**Actual hours on this assignment:** 7
 
 ## Explain, Change, Verify
 
