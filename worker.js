@@ -13,7 +13,7 @@
 
 // Allow requests from the Codespaces Live Server page.
 const CORS = {
-  "access-control-allow-origin": "https://aaronsarasota04.github.io/mgt3745-hw4/",
+  "access-control-allow-origin": "https://aaronsarasota04.github.io",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type",
 };
