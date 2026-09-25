@@ -1,12 +1,12 @@
 :root {
-  --paper: #f4f1ea;
-  --surface: #fffdf8;
+  --paper: #f5fbff;
+  --surface: #ffffff;
   --ink: #18221f;
-  --muted: #68736d;
-  --line: #d6d8ce;
-  --teal: #176b63;
-  --teal-dark: #0d4d48;
-  --coral: #df6b4f;
+  --muted: #536373;
+  --line: #dbeaf6;
+  --teal: #87ceeb;
+  --teal-dark: #4aa3d8;
+  --coral: #ffd700;
 }
 
 /* Use a stable box model and a warm, readable base surface for the whole app. */
